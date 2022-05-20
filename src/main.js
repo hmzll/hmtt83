@@ -7,6 +7,8 @@ import './styles/base.less'
 
 // 导入vant
 import './utils/vant'
+// 导入flexible
+import 'amfe-flexible'
 
 Vue.config.productionTip = false
 
