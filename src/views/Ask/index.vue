@@ -1,16 +1,15 @@
 <template>
   <div>
-    <router-view></router-view>
+      问答
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {};
-  },
-};
+
+}
 </script>
 
 <style>
+
 </style>
