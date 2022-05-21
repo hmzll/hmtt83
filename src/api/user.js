@@ -11,3 +11,13 @@ export const login = (data) => {
         data
     })
 }
+
+
+// 封装一个获取用户信息的接口
+export const userInfo = () => {
+
+    return request({
+        // 不能有空格
+        url: '/v1_0/user/profile'
+    })
+}
