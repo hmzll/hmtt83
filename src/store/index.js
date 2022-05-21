@@ -5,9 +5,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    num: 0
   },
 
   mutations: {
+    changeNum (state, num) {
+
+      state.num = num
+    }
   },
 
 })
