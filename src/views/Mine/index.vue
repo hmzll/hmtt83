@@ -38,18 +38,17 @@
 
 <script>
 // 导入接口
-import { userInfoAPI } from '@/api'
+import { userInfoAPI } from "@/api";
 export default {
-  data () {
+  data() {
     return {
-      userInfo: {}
-    }
+      userInfo: {},
+    };
   },
-  async created () {
-
-    let res = await userInfoAPI()
-    this.userInfo = res.data.data
-  }
+  async created() {
+    let res = await userInfoAPI();
+    this.userInfo = res.data.data;
+  },
 };
 </script>
 
