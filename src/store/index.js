@@ -1,17 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
 Vue.use(Vuex)
+import { setToken, getToken } from '@/utils/token'
 
 export default new Vuex.Store({
   state: {
-    num: 0
+    // 保存token和refresh_token的对象
+    // 本地存储有就从本地存储取，没有就给空对象
+    tokenObj: getToken() || {}
   },
 
   mutations: {
-    changeNum (state, num) {
-
-      state.num = num
+    // 提供修改token的方法
+    changeToken (state, obj) {
+      // 保存到vuex
+      state.tokenObj = obj
+      // 也保存到本地存储
+      setToken(obj)
     }
   },
 
