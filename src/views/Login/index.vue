@@ -81,9 +81,8 @@ export default {
         let res = await loginAPI(this.info);
 
         // 调用下面的代码，既存到vuex，也存到本地存储了
-        this.$store.commit('changeToken', res.data.data)
+        this.$store.commit("changeToken", res.data.data);
         this.$toast.success("登录成功");
-        
       } catch {
         this.$toast.fail("验证码错误");
       }

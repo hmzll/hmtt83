@@ -5,7 +5,9 @@ import { Field } from 'vant';
 import { Button } from 'vant';
 import { Toast } from 'vant';
 import { Tabbar, TabbarItem } from 'vant';
+import { Image as VanImage } from 'vant';
 
+Vue.use(VanImage);
 Vue.use(Tabbar);
 Vue.use(TabbarItem);
 Vue.use(Toast);
