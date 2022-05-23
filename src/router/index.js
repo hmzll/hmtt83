@@ -12,11 +12,13 @@ import home from '@/views/Home'
 import ask from '@/views/Ask'
 import video from '@/views/Video'
 import mine from '@/views/Mine'
+import edit from '@/views/Mine/edit.vue'
 
 const routes = [
   // 毛都不输入重定向到login
   { path: '/', redirect: '/login' },
   { name: 'login', path: '/login', component: login },
+  { name: 'edit', path: '/mine/edit', component: edit },
   {
     name: 'layout',
     path: '/layout',
