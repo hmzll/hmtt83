@@ -51,12 +51,8 @@ export default {
     ...mapState(["userInfo"]),
   },
 
-  async created() {
-    if (!this.userInfo.name) {
-      let res = await userInfoAPI();
-      // 把请求到的数据保存到vuex里
-      this.$store.commit("changeUserInfo", res.data.data);
-    }
+  created () {
+    this.$store.dispatch('reqUserInfo')
   },
 };
 </script>

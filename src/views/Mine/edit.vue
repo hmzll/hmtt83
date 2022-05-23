@@ -18,20 +18,14 @@
 </template>
 
 <script>
-import { userInfoAPI } from "@/api";
 import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState(["userInfo"]),
   },
 
-  async created() {
-    // 判断vuex里没有数据才发请求
-    if (!this.userInfo.name) {
-      let res = await userInfoAPI();
-      // 把请求到的数据保存到vuex里
-      this.$store.commit("changeUserInfo", res.data.data);
-    }
+  created () {
+    this.$store.dispatch('reqUserInfo')
   },
 };
 </script>
