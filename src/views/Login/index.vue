@@ -83,6 +83,9 @@ export default {
         // 调用下面的代码，既存到vuex，也存到本地存储了
         this.$store.commit("changeToken", res.data.data);
         this.$toast.success("登录成功");
+
+        // 把userInfo清空
+        this.$store.commit('changeUserInfo', {})
         
         // 判断有没有参数
         if (this.$route.query.back) {
