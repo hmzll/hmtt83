@@ -39,15 +39,24 @@
 <script>
 // 导入接口
 import { userInfoAPI } from "@/api";
+// 导入辅助函数
+import { mapState } from "vuex";
 export default {
-  data() {
-    return {
-      userInfo: {},
-    };
+  computed: {
+    // userInfo () {
+
+    //   return this.$store.state.userInfo
+    // }
+    // 用下面的辅助函数相当于生成上面的计算属性
+    ...mapState(["userInfo"]),
   },
+
   async created() {
-    let res = await userInfoAPI();
-    this.userInfo = res.data.data;
+    if (!this.userInfo.name) {
+      let res = await userInfoAPI();
+      // 把请求到的数据保存到vuex里
+      this.$store.commit("changeUserInfo", res.data.data);
+    }
   },
 };
 </script>

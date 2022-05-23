@@ -1,23 +1,39 @@
 <template>
   <div>
-    <van-nav-bar title="编辑资料" left-arrow />
+    <!-- $router.back()就是后退 -->
+    <van-nav-bar title="编辑资料" left-arrow @click-left="$router.back()" />
 
     <!-- 头像区域 -->
     <div class="avatar-box">
-      <van-image round fit="cover" src="https://img01.yzcdn.cn/vant/cat.jpeg" />
+      <van-image round fit="cover" :src="userInfo.photo" />
     </div>
 
     <!-- 资料区域 -->
     <van-cell-group>
-      <van-cell title="名称" value="用户名字" is-link/>
-      <van-cell title="性别" value="男" is-link/>
-      <van-cell title="生日" value="2000-03-11" is-link/>
+      <van-cell title="名称" :value="userInfo.name" is-link />
+      <van-cell title="性别" :value="userInfo.gender ? '女' : '男'" is-link />
+      <van-cell title="生日" :value="userInfo.birthday" is-link />
     </van-cell-group>
   </div>
 </template>
 
 <script>
-export default {};
+import { userInfoAPI } from "@/api";
+import { mapState } from "vuex";
+export default {
+  computed: {
+    ...mapState(["userInfo"]),
+  },
+
+  async created() {
+    // 判断vuex里没有数据才发请求
+    if (!this.userInfo.name) {
+      let res = await userInfoAPI();
+      // 把请求到的数据保存到vuex里
+      this.$store.commit("changeUserInfo", res.data.data);
+    }
+  },
+};
 </script>
 
 <style lang="less" scoped>

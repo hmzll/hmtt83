@@ -16,7 +16,7 @@ import edit from '@/views/Mine/edit.vue'
 
 const routes = [
   // 毛都不输入重定向到login
-  { path: '/', redirect: '/login' },
+  { path: '/', redirect: '/layout/home' },
   { name: 'login', path: '/login', component: login },
   { name: 'edit', path: '/mine/edit', component: edit },
   {
