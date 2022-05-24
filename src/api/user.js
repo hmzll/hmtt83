@@ -21,3 +21,15 @@ export const userInfo = () => {
         url: '/v1_0/user/profile'
     })
 }
+
+
+// 封装一个修改用户信息的接口
+export const editUserInfo = (data) => {
+
+    return request({
+        // 不能有空格
+        url: '/v1_0/user/profile',
+        method: 'patch',
+        data
+    })
+}
