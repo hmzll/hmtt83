@@ -12,7 +12,9 @@ import { Cell, CellGroup } from 'vant';
 import { Dialog } from 'vant';
 import { Popup } from 'vant';
 import { DatetimePicker } from 'vant';
+import { Uploader } from 'vant';
 
+Vue.use(Uploader);
 Vue.use(DatetimePicker);
 Vue.use(Popup);
 // 全局注册

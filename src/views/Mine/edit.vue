@@ -6,6 +6,7 @@
     <!-- 头像区域 -->
     <div class="avatar-box">
       <van-image round fit="cover" :src="userInfo.photo" />
+      <van-uploader :after-read="afterRead" />
     </div>
 
     <!-- 资料区域 -->
@@ -54,16 +55,39 @@
         :max-date="maxDate"
       />
     </van-popup>
+
+    <!-- 裁剪容器div -->
+    <div v-show="cropShow" class="crop-box">
+      <!-- 
+        img属性：用来设置被裁剪的图片
+        autoCrop: 生成截图框
+        autoCropWidth：设置截图框的宽度
+        autoCropHeight：设置截图框的高度
+       -->
+      <vueCropper
+        ref="cropper"
+        :img="cropImg"
+        autoCrop
+        autoCropWidth="200"
+        autoCropHeight="200"
+      ></vueCropper>
+
+      <van-button type="primary">裁剪</van-button>
+      <van-button type="primary">取消</van-button>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import { editUserInfoAPI } from "@/api";
-
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
+import { VueCropper } from "vue-cropper";
 
 export default {
+  components: {
+    VueCropper,
+  },
   computed: {
     ...mapState(["userInfo"]),
   },
@@ -76,10 +100,23 @@ export default {
       minDate: new Date(1949, 9, 1),
       maxDate: new Date(),
       currentDate: new Date(1984, 5, 19),
+      // 裁剪插件的图片
+      cropImg: '',
+      cropShow: false
     };
   },
 
   methods: {
+    // 本方法是当你选择完图片会触发的方法
+    // file.content里面有你选择图片的base64格式
+    // file.file里面有你选择图片的图片对象格式（可以用来做上传）
+    afterRead(file) {
+      
+      // 显示出裁剪区域
+      this.cropShow = true
+      // 把选择的图片交给裁剪插件
+      this.cropImg = file.content
+    },
     // 点击名字cell的事件
     async clickName() {
       // 显示对话框
@@ -133,9 +170,8 @@ export default {
 
     // 修改生日的确认事件
     async editBirthday() {
-
       // 把日期对象转成字符串
-      const birthday = dayjs(this.currentDate).format('YYYY-MM-DD')
+      const birthday = dayjs(this.currentDate).format("YYYY-MM-DD");
 
       // 发请求
       await editUserInfoAPI({
@@ -145,11 +181,11 @@ export default {
       // 修改到vuex
       this.$store.commit("changeUserInfo", {
         ...this.userInfo,
-        birthday
+        birthday,
       });
 
       // 隐藏弹出层
-      this.birthShow = false
+      this.birthShow = false;
     },
   },
   // // 页面中所有数据发生改变，都会来调用
@@ -165,19 +201,57 @@ export default {
 </script>
 
 <style lang="less" scoped>
+// 头像区域的div
 .avatar-box {
-  height: 140px;
+  @height: 140px;
+  height: @height;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   .van-image {
     width: 120px;
     height: 120px;
   }
+
+  // 上传组件
+  .van-uploader {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    ::v-deep .van-uploader__upload {
+      width: 100vw;
+      height: @height;
+      opacity: 0;
+    }
+  }
 }
 
 .van-field {
   border: 1px solid #ddd;
+}
+
+// 裁剪容器
+.crop-box {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f00;
+
+  .van-button {
+
+    position: absolute;
+    bottom: 0;
+
+    // 找到最后个van-button
+    &:last-child {
+      
+      right:0;
+    }
+  }
 }
 </style>
