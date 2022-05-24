@@ -13,7 +13,10 @@ import { Dialog } from 'vant';
 import { Popup } from 'vant';
 import { DatetimePicker } from 'vant';
 import { Uploader } from 'vant';
+import { Tab, Tabs } from 'vant';
 
+Vue.use(Tab);
+Vue.use(Tabs);
 Vue.use(Uploader);
 Vue.use(DatetimePicker);
 Vue.use(Popup);
