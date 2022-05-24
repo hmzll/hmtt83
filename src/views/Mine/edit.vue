@@ -72,15 +72,15 @@
         autoCropHeight="200"
       ></vueCropper>
 
-      <van-button type="primary">裁剪</van-button>
-      <van-button type="primary">取消</van-button>
+      <van-button @click="doCrop" type="primary">裁剪</van-button>
+      <van-button @click="cropShow = false" type="primary">取消</van-button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import { editUserInfoAPI } from "@/api";
+import { editUserInfoAPI, editPhotoAPI } from "@/api";
 import dayjs from "dayjs";
 import { VueCropper } from "vue-cropper";
 
@@ -101,21 +101,41 @@ export default {
       maxDate: new Date(),
       currentDate: new Date(1984, 5, 19),
       // 裁剪插件的图片
-      cropImg: '',
-      cropShow: false
+      cropImg: "",
+      cropShow: false,
     };
   },
 
   methods: {
+    // 点击裁剪触发的方法
+    doCrop() {
+      this.$refs.cropper.getCropBlob(async (data) => {
+
+        // data就是获取到的截图后的file对象
+        // 拿到对象后要上传到服务器
+        // ajax要上传文件该怎么办？使用FormData才能上传
+        let fm = new FormData()
+        fm.append('photo', data)
+        let res = await editPhotoAPI(fm)
+        
+        // 把图片上传后的地址存到vuex里
+        this.$store.commit('changeUserInfo', {
+          ...this.userInfo,
+          photo: res.data.data.photo
+        })
+
+        // 隐藏裁剪容器
+        this.cropShow = false
+      })
+    },
     // 本方法是当你选择完图片会触发的方法
     // file.content里面有你选择图片的base64格式
     // file.file里面有你选择图片的图片对象格式（可以用来做上传）
     afterRead(file) {
-      
       // 显示出裁剪区域
-      this.cropShow = true
+      this.cropShow = true;
       // 把选择的图片交给裁剪插件
-      this.cropImg = file.content
+      this.cropImg = file.content;
     },
     // 点击名字cell的事件
     async clickName() {
@@ -220,6 +240,7 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
+    width: 100vw;
 
     ::v-deep .van-uploader__upload {
       width: 100vw;
@@ -243,14 +264,12 @@ export default {
   background-color: #f00;
 
   .van-button {
-
     position: absolute;
     bottom: 0;
 
     // 找到最后个van-button
     &:last-child {
-      
-      right:0;
+      right: 0;
     }
   }
 }

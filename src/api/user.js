@@ -33,3 +33,13 @@ export const editUserInfo = (data) => {
         data
     })
 }
+
+// 封装一个修改头像的接口
+export const editPhoto = (data) => {
+
+    return request({
+        url: '/v1_0/user/photo',
+        method: 'patch',
+        data
+    })
+}
