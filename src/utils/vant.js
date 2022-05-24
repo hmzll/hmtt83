@@ -10,7 +10,11 @@ import { Col, Row } from 'vant';
 import { Icon } from 'vant';
 import { Cell, CellGroup } from 'vant';
 import { Dialog } from 'vant';
+import { Popup } from 'vant';
+import { DatetimePicker } from 'vant';
 
+Vue.use(DatetimePicker);
+Vue.use(Popup);
 // 全局注册
 Vue.use(Dialog);
 Vue.use(Cell);

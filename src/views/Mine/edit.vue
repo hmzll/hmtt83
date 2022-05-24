@@ -17,20 +17,51 @@
         is-link
       />
       <van-cell title="性别" :value="userInfo.gender ? '女' : '男'" is-link />
-      <van-cell title="生日" :value="userInfo.birthday" is-link />
+      <van-cell
+        @click="clickBirthday"
+        title="生日"
+        :value="userInfo.birthday"
+        is-link
+      />
     </van-cell-group>
 
     <!-- 修改名字的弹出框 -->
     <!-- v-model用来控制显示和隐藏 -->
-    <van-dialog @confirm="doEditName" v-model="nameDialogShow" title="修改名字" show-cancel-button>
+    <van-dialog
+      @confirm="doEditName"
+      v-model="nameDialogShow"
+      title="修改名字"
+      show-cancel-button
+    >
       <van-field ref="inpName" v-model="name" placeholder="请输入名字" />
     </van-dialog>
+
+    <!-- 修改生日的弹出层 -->
+    <!-- v-model用来控制显示和隐藏 -->
+    <van-popup v-model="birthShow" position="bottom" :style="{ height: '30%' }">
+      <!-- 
+        v-model：获取选中的时间，也可以设置当前显示的时间
+        min-date：能选择的最早日期
+        max-date：能选择的最大日期
+      -->
+      <van-datetime-picker
+        @cancel="birthShow = false"
+        @confirm="editBirthday"
+        v-model="currentDate"
+        type="date"
+        title="选择年月日"
+        :min-date="minDate"
+        :max-date="maxDate"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import { editUserInfoAPI } from '@/api'
+import { editUserInfoAPI } from "@/api";
+
+import dayjs from 'dayjs'
 
 export default {
   computed: {
@@ -41,6 +72,10 @@ export default {
     return {
       nameDialogShow: false,
       name: "",
+      birthShow: false,
+      minDate: new Date(1949, 9, 1),
+      maxDate: new Date(),
+      currentDate: new Date(1984, 5, 19),
     };
   },
 
@@ -69,24 +104,53 @@ export default {
       //   this.$refs.inpName.focus()
       // })
 
-      await this.$nextTick()
+      await this.$nextTick();
       // 下面的代码一定是等dom更新后调用的
-      this.$refs.inpName.focus()
+      this.$refs.inpName.focus();
     },
 
     // 点击确认修改名字的方法
-    async doEditName () {
+    async doEditName() {
       // 发请求
       await editUserInfoAPI({
-        name: this.name
-      })
+        name: this.name,
+      });
 
       // 发请求成功后要把新的名字修改到vuex里
-      this.$store.commit('changeUserInfo', {
+      this.$store.commit("changeUserInfo", {
         ...this.userInfo,
-        name: this.name
-      })
-    }
+        name: this.name,
+      });
+    },
+
+    // 点击生日cell的事件
+    clickBirthday() {
+      // 显示出生日的弹出层
+      this.birthShow = true;
+      // 把生日给日期选择显示(要给日期对象)
+      this.currentDate = new Date(this.userInfo.birthday);
+    },
+
+    // 修改生日的确认事件
+    async editBirthday() {
+
+      // 把日期对象转成字符串
+      const birthday = dayjs(this.currentDate).format('YYYY-MM-DD')
+
+      // 发请求
+      await editUserInfoAPI({
+        birthday,
+      });
+
+      // 修改到vuex
+      this.$store.commit("changeUserInfo", {
+        ...this.userInfo,
+        birthday
+      });
+
+      // 隐藏弹出层
+      this.birthShow = false
+    },
   },
   // // 页面中所有数据发生改变，都会来调用
   // updated () {
