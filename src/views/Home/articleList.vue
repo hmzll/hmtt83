@@ -25,32 +25,34 @@
             但是默认一定是false，不然一次都不会加载数据
             
      -->
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
-      <van-cell v-for="item in list" :key="item.art_id">
-        <template>
-          <!-- 标题 -->
-          <div>{{ item.title }}</div>
-          <!-- 图片部分 -->
-          <van-grid :border="false" :column-num="item.cover.type">
-            <van-grid-item v-for="val in item.cover.images" :key="val">
-              <van-image :src="val" />
-            </van-grid-item>
-          </van-grid>
-          <!-- 底部信息区域 -->
-          <div class="info">
-            <span>{{ item.aut_name }}</span>
-            <span>{{ item.comm_count }}评论</span>
-            <span>{{ item.pubdate | relvTime }}</span>
-            <van-icon name="cross" />
-          </div>
-        </template>
-      </van-cell>
-    </van-list>
+    <van-pull-refresh v-model="pullLoading" @refresh="onRefresh">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <van-cell v-for="item in list" :key="item.art_id">
+          <template>
+            <!-- 标题 -->
+            <div>{{ item.title }}</div>
+            <!-- 图片部分 -->
+            <van-grid :border="false" :column-num="item.cover.type">
+              <van-grid-item v-for="val in item.cover.images" :key="val">
+                <van-image :src="val" />
+              </van-grid-item>
+            </van-grid>
+            <!-- 底部信息区域 -->
+            <div class="info">
+              <span>{{ item.aut_name }}</span>
+              <span>{{ item.comm_count }}评论</span>
+              <span>{{ item.pubdate | relvTime }}</span>
+              <van-icon name="cross" />
+            </div>
+          </template>
+        </van-cell>
+      </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -68,6 +70,7 @@ export default {
   data() {
     return {
       list: [],
+      pullLoading: false,
       loading: false,
       finished: false,
       timestamp: Date.now(),
@@ -100,6 +103,27 @@ export default {
         this.finished = true;
       }
     },
+
+    // 下拉刷新触发的方法
+    async onRefresh () {
+
+      // 加载最新新闻
+      let res = await articleListAPI({
+        // 频道id
+        channel_id: this.channel_id,
+        // 因为要加载最新新闻，所以这里的时间戳写死当前时间戳
+        timestamp: Date.now()
+      });
+
+      // 加载的最新新闻要给数组
+      this.list = res.data.data.results
+
+      // 替换后再把本次的上一页新闻的数据时间戳存起来
+      this.timestamp = res.data.data.pre_timestamp
+
+      // 把加载状态改为false
+      this.pullLoading = false
+    }
   },
 };
 </script>
@@ -119,8 +143,7 @@ export default {
       margin: 0 15px;
     }
     .van-icon {
-
-      float: right;      
+      float: right;
     }
   }
 }

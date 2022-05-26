@@ -16,7 +16,9 @@ import { Uploader } from 'vant';
 import { Tab, Tabs } from 'vant';
 import { List } from 'vant';
 import { Grid, GridItem } from 'vant';
+import { PullRefresh } from 'vant';
 
+Vue.use(PullRefresh);
 Vue.use(Grid);
 Vue.use(GridItem)
 Vue.use(List);
