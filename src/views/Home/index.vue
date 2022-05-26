@@ -16,7 +16,7 @@
     <van-tabs>
       <van-tab v-for="item in ownChannels" :key="item.id" :title="item.name">
         <!-- 新闻列表 -->
-        内容 
+        <article-list :channel_id="item.id" />
       </van-tab>
 
       <div class="icon-box">
@@ -28,8 +28,11 @@
 
 <script>
 import { ownChannelsAPI } from '@/api'
+import articleList from './articleList.vue'
 export default {
-
+  components: {
+    articleList
+  },
   data () {
 
     return {

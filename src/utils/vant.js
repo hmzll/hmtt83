@@ -14,7 +14,9 @@ import { Popup } from 'vant';
 import { DatetimePicker } from 'vant';
 import { Uploader } from 'vant';
 import { Tab, Tabs } from 'vant';
+import { List } from 'vant';
 
+Vue.use(List);
 Vue.use(Tab);
 Vue.use(Tabs);
 Vue.use(Uploader);

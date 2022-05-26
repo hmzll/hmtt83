@@ -17,7 +17,7 @@
         :value="userInfo.name"
         is-link
       />
-      <van-cell title="性别" :value="userInfo.gender ? '女' : '男'" is-link />
+      <van-cell @click="genderShow = true" title="性别" :value="userInfo.gender ? '女' : '男'" is-link />
       <van-cell
         @click="clickBirthday"
         title="生日"
@@ -75,6 +75,13 @@
       <van-button @click="doCrop" type="primary">裁剪</van-button>
       <van-button @click="cropShow = false" type="primary">取消</van-button>
     </div>
+
+    <!-- 修改性别的弹出层 -->
+    <van-popup class="sex-box" v-model="genderShow" position="bottom">
+      <van-nav-bar title="修改性别" left-text="取消" @click-left="genderShow = false" />
+      <van-cell @click="changeGender(0)" title="男" is-link />
+      <van-cell @click="changeGender(1)" title="女" is-link />
+    </van-popup>
   </div>
 </template>
 
@@ -94,6 +101,7 @@ export default {
 
   data() {
     return {
+      genderShow: false,
       nameDialogShow: false,
       name: "",
       birthShow: false,
@@ -107,26 +115,39 @@ export default {
   },
 
   methods: {
+    async changeGender(gender) {
+      await editUserInfoAPI({
+        gender,
+      });
+
+      // 发请求成功后要把新的名字修改到vuex里
+      this.$store.commit("changeUserInfo", {
+        ...this.userInfo,
+        gender,
+      });
+
+      // 修改完成后隐藏弹出层
+      this.genderShow = false
+    },
     // 点击裁剪触发的方法
     doCrop() {
       this.$refs.cropper.getCropBlob(async (data) => {
-
         // data就是获取到的截图后的file对象
         // 拿到对象后要上传到服务器
         // ajax要上传文件该怎么办？使用FormData才能上传
-        let fm = new FormData()
-        fm.append('photo', data)
-        let res = await editPhotoAPI(fm)
-        
+        let fm = new FormData();
+        fm.append("photo", data);
+        let res = await editPhotoAPI(fm);
+
         // 把图片上传后的地址存到vuex里
-        this.$store.commit('changeUserInfo', {
+        this.$store.commit("changeUserInfo", {
           ...this.userInfo,
-          photo: res.data.data.photo
-        })
+          photo: res.data.data.photo,
+        });
 
         // 隐藏裁剪容器
-        this.cropShow = false
-      })
+        this.cropShow = false;
+      });
     },
     // 本方法是当你选择完图片会触发的方法
     // file.content里面有你选择图片的base64格式
@@ -272,5 +293,9 @@ export default {
       right: 0;
     }
   }
+}
+
+.sex-box {
+  height: 135px;
 }
 </style>
