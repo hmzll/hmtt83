@@ -1,6 +1,5 @@
 <template>
   <div class="article-list">
-
     <!-- 
         load事件绑定的onLoad方法，是专门用来加载数据的方法
             当数据没有铺满一屏时，自动调用
@@ -32,57 +31,73 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <van-cell v-for="item in list" :key="item.art_id" :title="item.title" />
+      <van-cell v-for="item in list" :key="item.art_id">
+        <template>
+          <!-- 标题 -->
+          <div>{{ item.title }}</div>
+          <!-- 图片部分 -->
+          <van-grid :border="false" :column-num="item.cover.type">
+            <van-grid-item v-for="val in item.cover.images" :key="val">
+              <van-image :src="val" />
+            </van-grid-item>
+          </van-grid>
+          <!-- 底部信息区域 -->
+          <div class="info">
+            <span>{{ item.aut_name }}</span>
+            <span>{{ item.comm_count }}评论</span>
+            <span>{{ item.pubdate | relvTime }}</span>
+            <van-icon name="cross" />
+          </div>
+        </template>
+      </van-cell>
     </van-list>
   </div>
 </template>
 
 <script>
 // 导入接口
-import { articleListAPI } from '@/api'
+import { articleListAPI } from "@/api";
 export default {
   props: {
     // 要求传入频道id
     channel_id: {
       // 必传
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       list: [],
       loading: false,
       finished: false,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   },
   methods: {
     async onLoad() {
-
       let res = await articleListAPI({
         // 频道id
         channel_id: this.channel_id,
         // 传入新闻时间戳，传当前时间戳就代表获取最新的新闻
         // 如果你往上滚了，就应该查以前的新闻，而以前的新闻要传的时间戳
         // 就是上一个时间段的时间戳
-        timestamp: this.timestamp
-      })
+        timestamp: this.timestamp,
+      });
 
       // 把数据存到list里
       // this.list = res.data.data.results
       // 注意：不能用赋值的，应该用push追加，而且应该是把results里的每个元素取出来追加
-      this.list.push(...res.data.data.results)
+      this.list.push(...res.data.data.results);
 
       // 把上一段新闻的时间戳赋值，赋值后下次来查就是查上一段新闻了
-      this.timestamp = res.data.data.pre_timestamp
+      this.timestamp = res.data.data.pre_timestamp;
 
       // 本次数据加载完了记得要把loading改成false，才能方便下次加载
-      this.loading = false
+      this.loading = false;
 
       // 判断新闻是否加载完毕
       if (res.data.data.pre_timestamp == null) {
-
-        this.finished = true
+        this.finished = true;
       }
     },
   },
@@ -90,13 +105,23 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .article-list {
-
   overflow: auto;
   position: fixed;
   width: 100%;
   top: 90px;
   bottom: 50px;
+
+  .info {
+    color: gray;
+
+    span:nth-child(2) {
+      margin: 0 15px;
+    }
+    .van-icon {
+
+      float: right;      
+    }
+  }
 }
 </style>

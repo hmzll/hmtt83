@@ -15,7 +15,10 @@ import { DatetimePicker } from 'vant';
 import { Uploader } from 'vant';
 import { Tab, Tabs } from 'vant';
 import { List } from 'vant';
+import { Grid, GridItem } from 'vant';
 
+Vue.use(Grid);
+Vue.use(GridItem)
 Vue.use(List);
 Vue.use(Tab);
 Vue.use(Tabs);

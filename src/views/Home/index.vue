@@ -18,7 +18,6 @@
         <!-- 新闻列表 -->
         <article-list :channel_id="item.id" />
       </van-tab>
-
       <div class="icon-box">
         <van-icon name="wap-nav" />
       </div>
