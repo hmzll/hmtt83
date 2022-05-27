@@ -9,3 +9,12 @@ export const articleList = (params) => {
         params
     })
 }
+
+
+// 封装一个获取文章详情的接口
+export const articleDetail = (id) => {
+
+    return request({
+        url: `/v1_0/articles/${id}`,
+    })
+}

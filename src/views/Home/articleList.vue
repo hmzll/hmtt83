@@ -32,7 +32,11 @@
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <van-cell v-for="item in list" :key="item.art_id">
+        <van-cell
+          v-for="item in list"
+          :key="item.art_id"
+          @click="$router.push({ name: 'article', query: { id: item.art_id } })"
+        >
           <template>
             <!-- 标题 -->
             <div>{{ item.title }}</div>
@@ -105,25 +109,24 @@ export default {
     },
 
     // 下拉刷新触发的方法
-    async onRefresh () {
-
+    async onRefresh() {
       // 加载最新新闻
       let res = await articleListAPI({
         // 频道id
         channel_id: this.channel_id,
         // 因为要加载最新新闻，所以这里的时间戳写死当前时间戳
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
 
       // 加载的最新新闻要给数组
-      this.list = res.data.data.results
+      this.list = res.data.data.results;
 
       // 替换后再把本次的上一页新闻的数据时间戳存起来
-      this.timestamp = res.data.data.pre_timestamp
+      this.timestamp = res.data.data.pre_timestamp;
 
       // 把加载状态改为false
-      this.pullLoading = false
-    }
+      this.pullLoading = false;
+    },
   },
 };
 </script>
