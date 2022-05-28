@@ -8,3 +8,13 @@ export const getCmtList = (params) => {
         params
     })
 }
+
+// 封装一个发表评论或者发表回复的接口
+export const sendCmt = (data) => {
+
+    return request({
+        url: '/v1_0/comments',
+        method: 'post',
+        data
+    })
+}

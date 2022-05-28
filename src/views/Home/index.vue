@@ -22,27 +22,42 @@
         <van-icon name="wap-nav" />
       </div>
     </van-tabs>
+
+    <!-- 频道管理的sheet -->
+    <van-action-sheet v-model="showChannel" title="频道管理">
+      <channel :ownList="ownChannels" :allList="allChannels"/>
+    </van-action-sheet>
   </div>
 </template>
 
 <script>
-import { ownChannelsAPI } from '@/api'
+import { ownChannelsAPI, allChannelsAPI } from '@/api'
 import articleList from './articleList.vue'
+import channel from './channel'
 export default {
+
   components: {
-    articleList
+    articleList,
+    channel
   },
   data () {
 
     return {
       // 自己的频道
-      ownChannels: []
+      ownChannels: [],
+      // 所有的频道
+      allChannels: [],
+      showChannel: true
     }
   },
   async created () {
     // 获取用户自己的频道
     let res1 = await ownChannelsAPI()
     this.ownChannels = res1.data.data.channels
+
+    // 获取所有频道
+    let res2 = await allChannelsAPI()
+    this.allChannels = res2.data.data.channels
   }
 };
 </script>

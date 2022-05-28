@@ -1,5 +1,31 @@
 <template>
   <div>
+    <!-- 固定的cell--用来显示当前的评论 -->
+    <van-cell>
+      <template>
+        <div class="cell-box">
+          <!-- 图片 -->
+          <van-image
+            round
+            fit="cover"
+            :src="currentCmt.aut_photo"
+          />
+          <!-- div -->
+          <div class="info-box">
+            <div style="color: #466bb5">{{ currentCmt.aut_name }}</div>
+            <div class="content">{{ currentCmt.content }}</div>
+            <div>
+              <span class="time">{{ currentCmt.pubdate | relvTime }}</span>
+            </div>
+          </div>
+        </div>
+      </template>
+    </van-cell>
+
+    <!-- 分割线 -->
+    <van-divider>回复列表</van-divider>
+
+    <!-- list -->
     <!-- 评论列表 -->
     <van-list
       v-model="isLoading"
@@ -18,13 +44,8 @@
               <div class="content">{{ item.content }}</div>
               <div>
                 <span class="time">{{ item.pubdate | relvTime }}</span>
-                <van-button @click="showReply(item)" size="mini" plain
-                  >回复({{ item.reply_count }})</van-button
-                >
               </div>
             </div>
-            <!-- 图标 -->
-            <van-icon name="like-o" />
           </div>
         </template>
       </van-cell>
@@ -44,20 +65,20 @@
         </template>
       </van-field>
     </div>
-
-    <!-- 弹出sheet -->
-    <van-action-sheet v-model="replyShow" title="发表回复">
-      <reply v-if="replyShow" :currentCmt="currentItem" />
-    </van-action-sheet>
   </div>
 </template>
 
 <script>
-import { getCmtListAPI, sendCmtAPI } from "@/api";
-import reply from "./reply.vue";
+import {getCmtListAPI, sendCmtAPI} from '@/api'
 export default {
-  components: {
-    reply,
+  props: {
+
+      currentCmt: {
+          // 限制类型为对象
+          type: Object,
+          // 限制必须要传
+          required: true
+      }
   },
   data() {
     return {
@@ -66,23 +87,13 @@ export default {
       list: [],
       cmt: "",
       offset: null,
-      replyShow: false,
-      currentItem: {},
     };
   },
-
   methods: {
-    //  点击回复触发的事件
-    showReply(item) {
-      // 点谁就传谁的值
-      this.currentItem = item;
-      // 显示出回复面板
-      this.replyShow = true;
-    },
     async onLoad() {
       let res = await getCmtListAPI({
-        type: "a",
-        source: this.$route.query.id,
+        type: "c",
+        source: this.currentCmt.com_id,
         offset: this.offset,
       });
 
@@ -109,14 +120,18 @@ export default {
 
       // 发请求
       let res = await sendCmtAPI({
-        target: this.$route.query.id,
+        target: this.currentCmt.com_id,
         content: this.cmt,
+        art_id: this.$route.query.id
       });
 
       // 发请求成功后加到数组最前面
       this.list.unshift(res.data.data.new_obj);
       // 清空文本
       this.cmt = "";
+
+      // 每添加一条就让回复数量+1
+      this.currentCmt.reply_count++
     },
   },
 };
