@@ -65,7 +65,7 @@ export default {
         })
 
         // 保存到数组
-        this.list = res.data.data.results
+        this.list.push(...res.data.data.results)
 
         // 记录last_id方便查下一页
         this.offset = res.data.data.last_id
