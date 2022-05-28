@@ -19,6 +19,13 @@
 
       <!-- 文章内容 -->
       <div class="content" v-html="info.content">文章内容</div>
+
+      <!-- 分割线 -->
+
+      <!-- 两个按钮 -->
+
+      <!-- 评论区域 -->
+      <article-comment />
     </div>
   </div>
 </template>
@@ -26,7 +33,11 @@
 <script>
 // 导入接口
 import { articleDetailAPI } from "@/api";
+import ArticleComment from './articleComment.vue'
 export default {
+  components: {
+    ArticleComment
+  },
   data() {
     return {
       info: {},
@@ -73,6 +84,10 @@ export default {
       }
       img {
         width: 100%;
+      }
+
+      p {
+        word-break: break-all;
       }
     }
   }
