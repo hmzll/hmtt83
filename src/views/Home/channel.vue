@@ -4,16 +4,29 @@
     <div class="my-box">
       <div class="title">
         <span>我的频道</span>
-        <van-button style="float: right" plain type="danger" size="small"
-          >编辑</van-button
+        <van-button
+          @click="isShow = !isShow"
+          style="float: right"
+          plain
+          type="danger"
+          size="small"
+          >{{ isShow ? "取消" : "编辑" }}</van-button
         >
       </div>
       <van-grid>
-        <van-grid-item
-          v-for="item in ownList"
-          :key="item.id"
-          :text="item.name"
-        />
+        <van-grid-item v-for="(item, index) in ownList" :key="item.id">
+          <span
+            class="sp"
+            :class="{ active: index == value }"
+            @click="onSpanClick(index)"
+            >{{ item.name }}</span
+          >
+          <van-icon
+            v-show="isShow && index != 0"
+            @click="ownList.splice(index, 1)"
+            name="cross"
+          />
+        </van-grid-item>
       </van-grid>
     </div>
 
@@ -27,6 +40,7 @@
           v-for="item in optionalList"
           :key="item.id"
           :text="item.name"
+          @click="ownList.push(item)"
         />
       </van-grid>
     </div>
@@ -46,6 +60,27 @@ export default {
     allList: {
       type: Array,
       required: true,
+    },
+
+    // 传递过来的下标
+    value: {
+      type: Number,
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      isShow: false,
+    };
+  },
+
+  methods: {
+    onSpanClick(index) {
+      // 要子传父
+      this.$emit("input", index);
+      // 关闭弹出层
+      this.$emit("close");
     },
   },
 
@@ -112,5 +147,20 @@ export default {
       font-size: 14px;
     }
   }
+}
+
+.sp {
+  font-size: 14px;
+}
+
+.van-icon-cross {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-size: 14px;
+}
+
+.active {
+  color: red;
 }
 </style>
