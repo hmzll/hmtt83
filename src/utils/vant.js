@@ -19,7 +19,9 @@ import { Grid, GridItem } from 'vant';
 import { PullRefresh } from 'vant';
 import { ActionSheet } from 'vant';
 import { Divider } from 'vant';
+import { Search } from 'vant';
 
+Vue.use(Search);
 Vue.use(Divider);
 Vue.use(ActionSheet);
 Vue.use(PullRefresh);

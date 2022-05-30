@@ -8,7 +8,7 @@
       </template>
       <!-- 自定义右侧 -->
       <template #right>
-        <van-button round icon="search" type="primary">搜索</van-button>
+        <van-button @click="$router.push('/search')" round icon="search" type="primary">搜索</van-button>
       </template>
     </van-nav-bar>
 

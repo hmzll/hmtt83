@@ -14,6 +14,8 @@ import video from '@/views/Video'
 import mine from '@/views/Mine'
 import edit from '@/views/Mine/edit.vue'
 import article from '@/views/Article'
+import search from '@/views/Search'
+import result from '@/views/Search/result.vue'
 
 const routes = [
   // 毛都不输入重定向到login
@@ -21,6 +23,8 @@ const routes = [
   { name: 'login', path: '/login', component: login },
   { name: 'edit', path: '/mine/edit', component: edit },
   { name: 'article', path: '/article', component: article },
+  { name: 'search', path: '/search', component: search },
+  { name: 'result', path: '/search/result', component: result },
   {
     name: 'layout',
     path: '/layout',
