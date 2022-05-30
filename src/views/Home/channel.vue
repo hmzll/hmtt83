@@ -23,7 +23,7 @@
           >
           <van-icon
             v-show="isShow && index != 0"
-            @click="ownList.splice(index, 1)"
+            @click="del(index)"
             name="cross"
           />
         </van-grid-item>
@@ -76,6 +76,19 @@ export default {
   },
 
   methods: {
+    // 删除
+    del (index) {
+
+      // 删除频道
+      this.ownList.splice(index, 1)
+
+      // 判断要删的下标是否小于当前选中的下标
+      if (index < this.value) {
+
+        // 如果是就要让父组件里选中的下标-1，所以把-1的值传递给了父组件
+        this.$emit('input', this.value - 1)
+      }
+    },
     onSpanClick(index) {
       // 要子传父
       this.$emit("input", index);

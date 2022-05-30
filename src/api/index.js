@@ -1,5 +1,5 @@
 import { login, userInfo, editUserInfo, editPhoto } from './user'
-import { ownChannels, allChannels } from './channel'
+import { ownChannels, allChannels, resetChannel } from './channel'
 import { articleList, articleDetail } from './article'
 import { getCmtList, sendCmt } from './comment'
 
@@ -14,3 +14,4 @@ export const articleDetailAPI = articleDetail
 export const getCmtListAPI = getCmtList
 export const sendCmtAPI = sendCmt
 export const allChannelsAPI = allChannels
+export const resetChannelAPI = resetChannel
