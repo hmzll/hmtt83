@@ -72,10 +72,12 @@ export default {
     };
   },
   async created() {
+    /*
     if (this.$store.state.tokenObj.token) {
       // 获取用户自己的频道
       let res1 = await ownChannelsAPI();
       this.ownChannels = res1.data.data.channels;
+
     } else {
       // 没有登录
       const channels = JSON.parse(window.localStorage.getItem(this.LOCAL_KEY));
@@ -90,7 +92,24 @@ export default {
         this.ownChannels = res1.data.data.channels;
       }
     }
-    
+    */
+
+    // 获取本地存储
+    const channels = JSON.parse(window.localStorage.getItem(this.LOCAL_KEY));
+    // 要么登录了，要么就是没登录但是本地存储没值，就发请求
+    if (this.$store.state.tokenObj.token || !channels) {
+      
+      // 获取用户自己的频道
+      let res1 = await ownChannelsAPI();
+      this.ownChannels = res1.data.data.channels;
+
+    } else {
+
+      // 能来到这肯定是既没登录，而且本地存储有值
+      // 所以直接取到本地存储的值赋值即可
+      this.ownChannels = channels;
+    }
+
     // 获取所有频道
     let res2 = await allChannelsAPI();
     this.allChannels = res2.data.data.channels;
