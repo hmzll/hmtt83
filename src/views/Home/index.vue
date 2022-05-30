@@ -68,13 +68,29 @@ export default {
       allChannels: [],
       showChannel: false,
       tabIndex: 0,
+      LOCAL_KEY: "channels",
     };
   },
   async created() {
-    // 获取用户自己的频道
-    let res1 = await ownChannelsAPI();
-    this.ownChannels = res1.data.data.channels;
+    if (this.$store.state.tokenObj.token) {
+      // 获取用户自己的频道
+      let res1 = await ownChannelsAPI();
+      this.ownChannels = res1.data.data.channels;
+    } else {
+      // 没有登录
+      const channels = JSON.parse(window.localStorage.getItem(this.LOCAL_KEY));
 
+      if (channels) {
+        // 本地存储有数据直接赋值给我的频道数组
+        this.ownChannels = channels;
+      } else {
+        // 没有数据，要给默认频道（要发请求）
+        // 获取用户自己的频道
+        let res1 = await ownChannelsAPI();
+        this.ownChannels = res1.data.data.channels;
+      }
+    }
+    
     // 获取所有频道
     let res2 = await allChannelsAPI();
     this.allChannels = res2.data.data.channels;
@@ -104,7 +120,7 @@ export default {
         } else {
           // 存本地
           window.localStorage.setItem(
-            "channels",
+            this.LOCAL_KEY,
             JSON.stringify(this.ownChannels)
           );
         }
