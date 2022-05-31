@@ -42,7 +42,7 @@
             <div>{{ item.title }}</div>
             <!-- 图片部分 -->
             <van-grid :border="false" :column-num="item.cover.type">
-              <van-grid-item v-for="val in item.cover.images" :key="val">
+              <van-grid-item v-for="(val, index) in item.cover.images" :key="index">
                 <van-image :src="val" />
               </van-grid-item>
             </van-grid>
