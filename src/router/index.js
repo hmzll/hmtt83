@@ -5,18 +5,32 @@ import store from '@/store'
 import { Toast } from 'vant'
 
 
-// 导入组件
-import login from '@/views/Login'
-import layout from '@/views/Layout'
-import home from '@/views/Home'
-import ask from '@/views/Ask'
-import video from '@/views/Video'
-import mine from '@/views/Mine'
-import edit from '@/views/Mine/edit.vue'
-import article from '@/views/Article'
-import search from '@/views/Search'
-import result from '@/views/Search/result.vue'
-import chat from '@/views/Mine/chat'
+// // 导入组件
+// import login from '@/views/Login'
+// import layout from '@/views/Layout'
+// import home from '@/views/Home'
+// import ask from '@/views/Ask'
+// import video from '@/views/Video'
+// import mine from '@/views/Mine'
+// import edit from '@/views/Mine/edit.vue'
+// import article from '@/views/Article'
+// import search from '@/views/Search'
+// import result from '@/views/Search/result.vue'
+// import chat from '@/views/Mine/chat'
+
+
+// 以下用懒加载方式
+const login = () => import('@/views/Login')
+const layout = () => import('@/views/Layout')
+const home = () => import('@/views/Home')
+const ask = () => import('@/views/Ask')
+const video = () => import('@/views/Video')
+const mine = () => import('@/views/Mine')
+const edit = () => import('@/views/Mine/edit.vue')
+const article = () => import('@/views/Article')
+const search = () => import('@/views/Search')
+const result = () => import('@/views/Search/result.vue')
+const chat = () => import('@/views/Mine/chat')
 
 const routes = [
   // 毛都不输入重定向到login
@@ -32,9 +46,9 @@ const routes = [
     path: '/layout',
     component: layout,
     children: [
-      { 
-        name: 'home', 
-        path: 'home', 
+      {
+        name: 'home',
+        path: 'home',
         component: home,
         meta: {
           keepAlive: true
@@ -42,13 +56,13 @@ const routes = [
       },
       { name: 'ask', path: 'ask', component: ask },
       { name: 'video', path: 'video', component: video },
-      { 
-        name: 'mine', 
-        path: 'mine', 
-        component: mine, 
+      {
+        name: 'mine',
+        path: 'mine',
+        component: mine,
         meta: {
           needLogin: true
-        } 
+        }
       },
     ]
   },
@@ -59,7 +73,7 @@ const router = new VueRouter({
 })
 
 // 全局前置守卫
-router.beforeEach( (to, from, next) => {
+router.beforeEach((to, from, next) => {
 
   if (to.meta.needLogin) {
 
@@ -68,7 +82,7 @@ router.beforeEach( (to, from, next) => {
 
       next()
 
-    }else {
+    } else {
       Toast.fail('请先登录')
       // 没有登录
       next({
@@ -78,11 +92,11 @@ router.beforeEach( (to, from, next) => {
         }
       })
     }
-  }else {
+  } else {
     // 代表去的是不需要登录就能访问的页面
     next()
   }
-} )
+})
 
 
 // 解决3.1版本后在控制台出现的警告
