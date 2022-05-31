@@ -71,6 +71,7 @@ export default {
       LOCAL_KEY: "channels",
     };
   },
+
   async created() {
     /*
     if (this.$store.state.tokenObj.token) {
@@ -146,6 +147,11 @@ export default {
       }
     },
   },
+
+  destroyed () {
+
+    console.log('home销毁了')
+  }
 };
 </script>
 

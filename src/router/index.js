@@ -30,7 +30,14 @@ const routes = [
     path: '/layout',
     component: layout,
     children: [
-      { name: 'home', path: 'home', component: home },
+      { 
+        name: 'home', 
+        path: 'home', 
+        component: home,
+        meta: {
+          keepAlive: true
+        }
+      },
       { name: 'ask', path: 'ask', component: ask },
       { name: 'video', path: 'video', component: video },
       { 

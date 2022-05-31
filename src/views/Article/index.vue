@@ -48,6 +48,10 @@ export default {
     let res = await articleDetailAPI(this.$route.query.id);
     this.info = res.data.data;
   },
+
+  destroyed () {
+    console.log('article被销毁')
+  }
 };
 </script>
 

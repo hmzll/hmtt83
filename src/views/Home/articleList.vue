@@ -1,5 +1,5 @@
 <template>
-  <div class="article-list">
+  <div ref="artList" @scroll="onScroll" class="article-list">
     <!-- 
         load事件绑定的onLoad方法，是专门用来加载数据的方法
             当数据没有铺满一屏时，自动调用
@@ -78,9 +78,16 @@ export default {
       loading: false,
       finished: false,
       timestamp: Date.now(),
+      // 记录滚动条位置的变量
+      scrollTop: 0
     };
   },
   methods: {
+    // 滚动触发的事件
+    onScroll () {
+      // 记录滚动条的位置
+      this.scrollTop = this.$refs.artList.scrollTop
+    },
     async onLoad() {
       let res = await articleListAPI({
         // 频道id
@@ -128,6 +135,17 @@ export default {
       this.pullLoading = false;
     },
   },
+
+  activated () {
+    // 之前记录多少距离，这里就给它多少
+    this.$refs.artList.scrollTop = this.scrollTop
+  },
+
+  // deactivated(){
+  //   // 保存滚动条的位置，当这个钩子被调用的时候，它已经看不到了。
+  //   // 就意味着滚动条也归0了
+  //   console.log('未活动了', this.$refs.artList.scrollTop)
+  // }
 };
 </script>
 
